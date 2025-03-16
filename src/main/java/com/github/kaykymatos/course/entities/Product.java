@@ -1,5 +1,6 @@
 package com.github.kaykymatos.course.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -21,10 +22,10 @@ public class Product implements Serializable {
     private String description;
     private Double price;
     private String imgUrl;
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    @Transient
+    @ManyToMany
+    @JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
+
 
     public Product() {
     }
@@ -85,7 +86,12 @@ public class Product implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(description, product.description) && Objects.equals(price, product.price) && Objects.equals(imgUrl, product.imgUrl) && Objects.equals(categories, product.categories);
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     @Override
@@ -100,8 +106,4 @@ public class Product implements Serializable {
                 '}';
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, price, imgUrl, categories);
-    }
 }

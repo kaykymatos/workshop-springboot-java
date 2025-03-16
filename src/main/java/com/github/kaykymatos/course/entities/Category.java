@@ -18,9 +18,8 @@ public class Category  implements Serializable {
     private Long id;
     private String name;
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "categories")
-    @Transient
+    @JsonIgnore
     private Set<Product> products = new HashSet<>();
 
     public Category() {
@@ -55,12 +54,12 @@ public class Category  implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(id, category.id) && Objects.equals(name, category.name) && Objects.equals(products, category.products);
+        return Objects.equals(id, category.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, products);
+        return Objects.hashCode(id);
     }
 
     @Override
