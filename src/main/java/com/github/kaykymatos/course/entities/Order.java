@@ -1,34 +1,40 @@
 package com.github.kaykymatos.course.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.kaykymatos.course.entities.enums.OrderStatus;
 import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.TimeZone;
 
 @Entity
 @Table(name = "tb_order")
 public class Order implements Serializable {
     @Serial
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
+    private Integer orderStatus;
 
     public Order() {
     }
 
-    public Order(Long id, Instant moment, User client) {
+    public Order(Long id, Instant moment, User client, OrderStatus orderStatus) {
         super();
         this.id = id;
         this.moment = moment;
         this.client = client;
+        setOrderStatus(orderStatus);
     }
 
     public Long getId() {
@@ -55,16 +61,25 @@ public class Order implements Serializable {
         this.client = client;
     }
 
+    public OrderStatus getOrderStatus() {
+        return OrderStatus.valueOf(orderStatus);
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        if (orderStatus != null)
+            this.orderStatus = orderStatus.getCode();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(id, order.id) && Objects.equals(moment, order.moment) && Objects.equals(client, order.client);
+        return Objects.equals(id, order.id) && Objects.equals(moment, order.moment) && Objects.equals(client, order.client) && orderStatus == order.orderStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, moment, client);
+        return Objects.hash(id, moment, client, orderStatus);
     }
 
     @Override
@@ -73,6 +88,7 @@ public class Order implements Serializable {
                 "id=" + id +
                 ", moment=" + moment +
                 ", client=" + client +
+                ", orderStatus=" + orderStatus +
                 '}';
     }
 }
