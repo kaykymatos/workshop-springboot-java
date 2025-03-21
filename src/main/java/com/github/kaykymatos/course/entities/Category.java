@@ -9,7 +9,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "tb_category")
-public class Category  implements Serializable {
+public class Category implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -26,6 +26,7 @@ public class Category  implements Serializable {
     }
 
     public Category(Long id, String name) {
+        super();
         this.id = id;
         this.name = name;
     }
