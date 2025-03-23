@@ -23,6 +23,12 @@ public class UserResource {
         return ResponseEntity.created(uri).body(obj);
     }
 
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> create(@PathVariable Long id) {
+         userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userService.fidAll();
